@@ -156,7 +156,7 @@ int bitXor(int x, int y) {
 int tmin(void) {
   int a = 1;
   //printf("sizeof(int) is %d\n", sizeof(int)); 4 
-  return a << (sizeof(int)*8 - 1);
+  return a << 31;
 }
 //2
 /*
@@ -166,15 +166,11 @@ int tmin(void) {
  *   Max ops: 10
  *   Rating: 1
  */
+// ~(Tmax+1) = x tmax 
 int isTmax(int x) {
-  //return (x|0x7fffffff)== x; -1  
-  //return (x|tmin()) == -1; -1 
-  int max = 0x7ffffff;
-  // x&max keep low 31 digits, and turn mst 0
-  // x&tmin() turn low 31 digits 0, and keep mst 
-  int ans1 = (x&max) == max;
-  int ans2 = (x&tmin()) == 0;
-  return ans1 & ans2;
+  int b = !(~x);// should be zero; eliminate -1 
+  int a = ((~(x+1))^x); // should be zero; 
+  return !(b|a);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -185,8 +181,13 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  int a = 0xaaaaaaaa;
-  return (a&x) == a;
+  int a = ~x; // say x is 1_1_,1_1_; ~x is 0_0_,0_0_
+  int b = 0xaa;            // ~x & (10101010) -> 0;
+  int c1 = a&b;
+  int c2 = (a>>8)&b; 
+  int c3 = (a>>16)&b; 
+  int c4 = (a>>24)&b;  
+  return !(c1 | c2 | c3 | c4); 
 }
 /* 
  * negate - return -x 
@@ -208,9 +209,15 @@ int negate(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
-int isAsciiDigit(int x) {
-  
-  return 2;
+int isAsciiDigit(int f) {
+  int high = f >> 8; // should be 0 
+  int mid = (f >> 4)^0x3; // should be 0   
+  int x = (f>>3)&0x1;
+  int y = (f>>2)&0x1;
+  int z = (f>>1)&0x1;
+  int lowans = x&(y|z); // should be 0
+  return !(high | mid | lowans);
+
 }
 /* 
  * conditional - same as x ? y : z 
@@ -219,8 +226,13 @@ int isAsciiDigit(int x) {
  *   Max ops: 16
  *   Rating: 3
  */
+// c&y | (~c)&z;
+// 1 + (-1) = 0x000..0
+// 0 + (-1) = 0xfff..f
 int conditional(int x, int y, int z) {
-  return 2;
+  int c = !x + (~0); // if x == 0 c == 0x0; else c = 0xff.ff
+
+  return (c&y) | ((~c)&z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -230,6 +242,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
+  
   return 2;
 }
 //4
@@ -242,6 +255,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
+  
   return 2;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
