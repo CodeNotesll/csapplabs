@@ -1,0 +1,47 @@
+Border relations with Canada have never been better.
+1 2 4 8 16 32
+3 256 # (5, 206) (7, 327)   
+7 0 DrEvil 
+yonefg
+4 3 2 1 6 5 
+22 
+
+
+Detail: 
+phase_1:
+    Border relations with Canada have never been better.
+phase_2:
+    1 2 4 8 16 32 
+phase_3:
+    phase_3 has 8 answers, each is a two-int pair
+    0 207
+    1 311
+    2 707
+    3 256 
+    4 389
+    5 206
+    6 682
+    7 327
+phase_4:
+    phase_4 has 4 answers, each is a two-int pair,
+    the second one is 0, first one in set {0, 1, 3,7}
+    " DrEvil " sufixed, to unlock secret phase;
+    i.e. 7 0 DrEvil 
+
+phase_5:
+    the answer is six chars
+    this six chars's lowest four bits is 9, f, e, 5, 6, 7 respectively
+
+    9: {y, i , Y, ), g, I}
+    f: {/, ?, O, _, o}
+    e: {N, ^, n, ~}
+    5: {%, 5, E, U, e, u}
+    6: {&, 6, F, V, f, v}
+    7: {7, G, W, g, w}
+
+phase_6
+   six ints
+   4 3 2 1 6 5 
+
+phase_7(secret phase):
+    22
