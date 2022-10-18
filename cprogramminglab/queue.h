@@ -38,7 +38,7 @@ typedef struct list_ele {
 /**
  * @brief Queue structure representing a list of elements
  */
-typedef struct {
+typedef struct queue {
     /**
      * @brief Pointer to the first element in the queue, or NULL if the
      *        queue is empty.
@@ -48,6 +48,8 @@ typedef struct {
      * TODO: You will need to add more fields to this structure
      *       to efficiently implement q_size and q_insert_tail
      */
+    list_ele_t *tail;
+    size_t size;
 } queue_t;
 
 /************** Operations on queue ************************/

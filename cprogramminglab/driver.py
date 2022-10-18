@@ -29,6 +29,8 @@ class Tracer:
         13: "trace-13-perf",
         14: "trace-14-perf",
         15: "trace-15-perf",
+        16: "trace-16-myown",
+        17: "trace-17-it_after_rh"
     }
 
     traceProbs = {
@@ -47,9 +49,11 @@ class Tracer:
         13: "Trace-13",
         14: "Trace-14",
         15: "Trace-15",
+        16: "Trace-16",
+        17: "Trace-17"
     }
 
-    maxScores = [0, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]
+    maxScores = [0, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7,8]
 
     def __init__(self, qtest, verbLevel=0, autograde=False):
         self.qtest = qtest

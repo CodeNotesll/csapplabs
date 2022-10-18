@@ -3,8 +3,8 @@
 #
 
 # Path to LLVM when running on autograder and shark cluster
-ifneq (,$(wildcard /usr/lib/llvm-7/bin/))
-  LLVM_PATH = /usr/lib/llvm-7/bin/
+ifneq (,$(wildcard /usr/bin/))
+  LLVM_PATH = /usr/bin/
 else
   ifneq (,$(wildcard /usr/local/depot/llvm-7.0/bin/))
     LLVM_PATH = /usr/local/depot/llvm-7.0/bin/
@@ -25,7 +25,8 @@ ifneq (,$(LLVM_PATH))
   endif
 endif
 
-CC = $(LLVM_PATH)clang
+# CC = $(LLVM_PATH)clang
+CC = /usr/bin/clang
 CFLAGS = -std=c99 -Og -g -Wall -Wextra -Wpedantic -Wconversion
 CFLAGS += -Wstrict-prototypes -Wwrite-strings -Werror
 

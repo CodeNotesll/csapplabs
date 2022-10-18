@@ -16,6 +16,7 @@
 #include "queue.h"
 #include "harness.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -26,7 +27,11 @@
 queue_t *queue_new(void) {
     queue_t *q = malloc(sizeof(queue_t));
     /* What if malloc returned NULL? */
-    q->head = NULL;
+    if (q) { // q is not NULL
+        q->head = NULL;
+        q->tail = NULL;
+        q->size = 0;
+    }
     return q;
 }
 
@@ -37,7 +42,23 @@ queue_t *queue_new(void) {
 void queue_free(queue_t *q) {
     /* How about freeing the list elements and the strings? */
     /* Free queue structure */
+    if (!q)
+        return;
+    list_ele_t *head = q->head;
+    while (head) {
+        // free string
+        char *v = head->value;
+        if (v)
+            free(v);
+        list_ele_t *next = head->next; // pointer to next node
+        free(head);
+        head = next;
+    }
+    q->head = NULL;
+    q->tail = NULL;
     free(q);
+    q = NULL;
+    return;
 }
 
 /**
@@ -53,13 +74,32 @@ void queue_free(queue_t *q) {
  * @return false if q is NULL, or memory allocation failed
  */
 bool queue_insert_head(queue_t *q, const char *s) {
+    if (!q || !s)
+        return false;
     list_ele_t *newh;
     /* What should you do if the q is NULL? */
-    newh = malloc(sizeof(list_ele_t));
+
     /* Don't forget to allocate space for the string and copy it */
     /* What if either call to malloc returns NULL? */
+
+    newh = malloc(sizeof(list_ele_t));
+    if (!newh) {
+        return false;
+    }
+    newh->value = (char *)malloc((strlen(s) + 1) * sizeof(char));
+
+    if (!newh->value) {
+        free(newh); /// !!!!!!!!!!  free list Node in heap
+        return false;
+    }
+    memcpy(newh->value, s, strlen(s) + 1);
+
     newh->next = q->head;
     q->head = newh;
+    if (!q->tail) { // the first head
+        q->tail = newh;
+    }
+    q->size++;
     return true;
 }
 
@@ -78,7 +118,32 @@ bool queue_insert_head(queue_t *q, const char *s) {
 bool queue_insert_tail(queue_t *q, const char *s) {
     /* You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    return false;
+    if (!q || !s)
+        return false;
+    list_ele_t *newh;
+    /* What should you do if the q is NULL? */
+    newh = malloc(sizeof(list_ele_t));
+    if (!newh) {
+        return false;
+    }
+
+    newh->value = (char *)malloc((strlen(s) + 1) * sizeof(char));
+
+    if (!newh->value) {
+        free(newh); /// !!!!!!!!!! free list node in heap
+        return false;
+    }
+    memcpy(newh->value, s, strlen(s) + 1);
+
+    newh->next = NULL;
+    if (q->tail) // q->tail points to a node
+        q->tail->next = newh;
+    q->tail = newh; // move q->tail pointer
+    if (!q->head) { // q->head is NUll, the queue is empty()
+        q->head = newh;
+    }
+    q->size++;
+    return true;
 }
 
 /**
@@ -100,7 +165,36 @@ bool queue_insert_tail(queue_t *q, const char *s) {
  */
 bool queue_remove_head(queue_t *q, char *buf, size_t bufsize) {
     /* You need to fix up this code. */
-    q->head = q->head->next;
+    if (!q || !bufsize) { // q is NULL
+        return false;
+    }
+
+    list_ele_t *head = q->head;
+    if (!head) { // queue is empty
+        if (buf)
+            buf[0] = '\0';
+        return false;
+    }
+
+    q->head = head->next;
+    head->next = NULL;
+
+    if (head == q->tail) { // or q->head == NULL
+        q->tail = NULL;    // in this case only one node exists
+    }                      // queue becomes empty after removal
+
+    if (buf && head->value) {
+        size_t num = bufsize - 1;
+        if (strlen(head->value) < num) {
+            num = strlen(head->value);
+        }
+        memcpy(buf, head->value, num);
+        buf[num] = '\0';
+        free(head->value);
+    }
+    free(head);
+
+    q->size--;
     return true;
 }
 
@@ -117,7 +211,9 @@ bool queue_remove_head(queue_t *q, char *buf, size_t bufsize) {
 size_t queue_size(queue_t *q) {
     /* You need to write the code for this function */
     /* Remember: It should operate in O(1) time */
-    return 0;
+    if (!q)
+        return 0;
+    return q->size;
 }
 
 /**
@@ -131,4 +227,17 @@ size_t queue_size(queue_t *q) {
  */
 void queue_reverse(queue_t *q) {
     /* You need to write the code for this function */
+    if (!q || !q->head) { // q is NUll of q is empty
+        return;
+    }
+    q->tail = q->head;
+    list_ele_t *prev = NULL;
+    while (q->head) {
+        list_ele_t *next = q->head->next;
+        q->head->next = prev;
+        prev = q->head;
+        q->head = next;
+    }
+    q->head = prev;
+    return;
 }
