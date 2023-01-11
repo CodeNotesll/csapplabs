@@ -60,7 +60,7 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
 
     /* Evaluate the performance of each registered transpose function */
 
-    for (i=0; i<func_counter; i++) {
+    for (i=0; i<func_counter; i++) {    // evaluate every registered function 
         if (strcmp(func_list[i].description, SUBMIT_DESCRIPTION) == 0 )
             results.funcid = i; /* remember which function is the submission */
 
@@ -69,8 +69,12 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
         /* Use valgrind to generate the trace */
 
         sprintf(cmd, "valgrind --tool=lackey --trace-mem=yes --log-fd=1 -v ./tracegen -M %d -N %d -F %d  > trace.tmp", M, N,i);
-        flag=WEXITSTATUS(system(cmd));
-        if (0!=flag) {
+        //sprintf(cmd, "valgrind --tool=lackey --trace-mem=yes --log-fd=1 -v ./tracegen -M %d -N %d -F %d  > trace%d.tmp", M, N,i,i);
+		// sprintf 将字符串放入放入cmd数组中
+		// system(cmd) 执行valgrind 命令， valgrind跟踪 ./tracegen 命令执行 
+        flag=WEXITSTATUS(system(cmd));  // execute 
+        if (0!=flag) {  // flag != 0: then error 
+            // 检查 tracegen.c line 104, 101, 94;
             printf("Validation error at function %d! Run ./tracegen -M %d -N %d -F %d for details.\nSkipping performance evaluation for this function.\n",flag-1,M,N,i);      
             continue;
         }
@@ -81,7 +85,7 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
         fscanf(marker_fp, "%llx %llx", &marker_start, &marker_end);
         fclose(marker_fp);
 
-
+        // system(cmd)
         func_list[i].correct=1;
 
         /* Save the correctness of the transpose submission */
@@ -100,6 +104,7 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
     
         /* Locate trace corresponding to the trans function */
         flag = 0;
+        // 
         while (fgets(buf, 1000, full_trace_fp) != NULL) {
 
             /* We are only interested in memory access instructions */
@@ -137,8 +142,8 @@ void eval_perf(unsigned int s, unsigned int E, unsigned int b)
         /* Run the reference simulator */
         printf("Step 2: Evaluating performance (s=%d, E=%d, b=%d)\n", s, E, b);
         char cmd[255];
-        sprintf(cmd, "./csim-ref -s %u -E %u -b %u -t trace.f%d > /dev/null", 
-                s, E, b, i);
+        sprintf(cmd, "./csim-ref -v -s %u -E %u -b %u -t trace.f%d > trace.f%d.output", 
+                s, E, b, i,i);
         system(cmd);
     
         /* Collect results from the reference simulator */

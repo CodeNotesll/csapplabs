@@ -5,7 +5,7 @@
 CC = gcc
 CFLAGS = -g -Wall -Werror -std=c99 -m64
 
-all: csim test-trans tracegen
+all: csim test-trans tracegen get-cache-num
 	# Generate a handin tar file each time you compile
 	-tar -cvf ${USER}-handin.tar  csim.c trans.c 
 
@@ -17,7 +17,8 @@ test-trans: test-trans.c trans.o cachelab.c cachelab.h
 
 tracegen: tracegen.c trans.o cachelab.c
 	$(CC) $(CFLAGS) -O0 -o tracegen tracegen.c trans.o cachelab.c
-
+get-cache-num: get_cache_num.c
+	$(CC) $(CFLAGS) -O0 -o get-cache-num get_cache_num.c 
 trans.o: trans.c
 	$(CC) $(CFLAGS) -O0 -c trans.c
 
